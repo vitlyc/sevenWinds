@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+$bg-primary: #27272a;
+$bg-secondary: #202124;
+$color-primary: #ffffff;
+$color-secondary: #a1a1aa;
+
+:root {
+  --color-light: #ffffff;
+  --color-dark: #a1a1aa;
+  --bg-light: #27272a;
+  --bg-dark: #202124;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: inherit;
+  margin: 0;
+  padding: 0;
+  font-weight: 400;
+}
+
+html,
+body,
+#root,
+.app {
+  height: 100vh;
+  color: $color-primary;
+  background-color: $bg-primary;
+  font-size: 14px;
+  display: grid;
+  grid-template-columns: 234px auto;
+  grid-template-rows: 44px auto;
+}

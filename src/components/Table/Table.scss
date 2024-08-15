@@ -1,0 +1,87 @@
+.table {
+    grid-column: 2 / span 7;
+    grid-row: 2 / auto;
+
+    // grid-column: 2 / auto;
+    // grid-row: 2 / span 1;
+    .no-select {
+        -webkit-user-select: none;
+        /* Chrome, Safari, Opera */
+        -moz-user-select: none;
+        /* Firefox */
+        -ms-user-select: none;
+        /* Internet Explorer/Edge */
+        user-select: none;
+        /* Стандартный синтаксис */
+
+    }
+
+    width: calc(100vw - 260px);
+    background-color: var(--bg-dark);
+    padding-left: 10px;
+
+    .title {
+        font-size: 18px;
+        border-right: 1px solid #414144;
+        max-width: fit-content;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 12px 15px;
+    }
+
+    .table-section {
+        width: 100%;
+        overflow-x: auto;
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+            /* Ensures fixed table layout */
+            border-collapse: collapse;
+
+            thead {
+                display: table-header-group;
+                color: var(--color-dark);
+                border-bottom: 1px solid #414144;
+
+                th {
+                    padding: 12px 10px;
+                    text-align: left;
+                    // border-right: 1px solid #414144;
+
+
+                }
+
+                th:nth-child(1) {
+                    width: 170px;
+
+                }
+            }
+
+            tbody {
+                display: table-row-group;
+
+
+
+                td {
+                    padding: 12px 10px;
+                    text-align: left;
+                    // border-right: 1px solid #414144;
+
+                }
+
+                tr {
+                    display: table-row;
+
+                    &.child-row td {
+                        margin-left: calc(var(--base-padding, 0px) + 20px);
+                        /* Adjust padding for child rows */
+                    }
+                }
+            }
+        }
+    }
+
+
+}

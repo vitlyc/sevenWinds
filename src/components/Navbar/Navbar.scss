@@ -1,0 +1,36 @@
+.navbar {
+    grid-column: 1 / auto;
+    grid-row: 1 / span 1;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 31px;
+    padding: 10px 20px;
+    border-bottom: 1px solid #414144;
+    height: 44px;
+
+    .buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        color: #A1A1AA;
+        cursor: pointer;
+    }
+
+    .links {
+        display: flex;
+        font-weight: 400;
+        font-size: 14px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 28px;
+        cursor: pointer;
+
+        // h4 {
+        //     margin: 0;
+        //     font-weight: 400;
+        //     font-size: 14px;
+        // }
+    }
+}

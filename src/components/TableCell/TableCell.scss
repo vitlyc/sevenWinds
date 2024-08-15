@@ -1,0 +1,74 @@
+.cell {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    width: 85px;
+
+    .icon {
+        cursor: pointer;
+        font-size: 24px;
+        transition: opacity 0.3s ease;
+        z-index: 1;
+    }
+
+    .delete {
+        top: 0;
+        left: 25px;
+        transition: opacity 0.3s ease;
+    }
+
+    .container {
+        background-color: #414144;
+        padding: 3px;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        width: 55px;
+        position: relative;
+
+        &.transparent {
+            background-color: transparent;
+        }
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: -120%; //вверх вниз
+            bottom: -50%; //длина палочки -больше
+            left: -11%; // -влево
+
+            height: 53px; //длина палочки
+            width: 1px;
+            background-color: rgb(255, 255, 255);
+            z-index: 0;
+        }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: 56%; //-вверх
+            left: 0%; // -влево
+            width: 11px; //длина палочки
+            height: 1px;
+            background-color: rgb(255, 255, 255);
+            z-index: 1;
+            transform: translateX(-50%);
+        }
+
+        &.nested-1 {
+            &::before {
+                content: '';
+                background-color: rgb(188, 30, 30);
+                width: 0px;
+            }
+
+            &::after {
+                content: '';
+                background-color: rgb(188, 30, 30);
+                width: 0px;
+
+            }
+        }
+    }
+}
