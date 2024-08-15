@@ -56,47 +56,53 @@ const TableRow = ({ row, nested, isRowCreated, setIsRowCreated }: Props) => {
     child: [],
   }
 
+  const findAndUpdateRow = (
+    rows: Row[],
+    targetId: number,
+    newRow?: Row
+  ): boolean => {
+    for (let r of rows) {
+      if (r.id === targetId) {
+        if (newRow) {
+          r.child = r.child || []
+          r.child.push(newRow)
+        }
+        return true
+      }
+      if (r.child && r.child.length > 0) {
+        const found = findAndUpdateRow(r.child, targetId, newRow)
+        if (found) return true
+      }
+    }
+    return false
+  }
+
+  const findAndDeleteRow = (rows: Row[], targetId: number): boolean => {
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].id === targetId) {
+        rows.splice(i, 1)
+        return true
+      }
+      if (rows[i].child && rows[i].child.length > 0) {
+        const found = findAndDeleteRow(rows[i].child, targetId)
+        if (found) return true
+      }
+    }
+    return false
+  }
+
   const handleAddEmptyRow = () => {
     if (!cachedRows || isRowCreated) return
-    const findAndUpdateRow = (rows: Row[], targetId: number): boolean => {
-      for (let r of rows) {
-        if (r.id === targetId) {
-          r.child = r.child || []
-          r.child.push(newChildRow)
-          return true
-        }
-        if (r.child && r.child.length > 0) {
-          const found = findAndUpdateRow(r.child, targetId)
-          if (found) return true
-        }
-      }
-      return false
-    }
+
     dispatch(
       updateQueryData('getRows', undefined, (draft) => {
-        findAndUpdateRow(draft, row.id)
+        findAndUpdateRow(draft, row.id, newChildRow)
       })
     )
     setIsRowCreated(true)
   }
 
   const handleDeleteRow = async () => {
-    const findAndDeleteRow = (rows: Row[], targetId: number): boolean => {
-      for (let i = 0; i < rows.length; i++) {
-        if (rows[i].id === targetId) {
-          rows.splice(i, 1) // Удаляем строку с указанным id
-          return true
-        }
-        if (rows[i].child && rows[i].child.length > 0) {
-          const found = findAndDeleteRow(rows[i].child, targetId)
-          if (found) {
-            return true
-          }
-        }
-      }
-      return false
-    }
-
     if (row.id === 112233) {
       dispatch(
         updateQueryData('getRows', undefined, (draft) => {
@@ -115,22 +121,20 @@ const TableRow = ({ row, nested, isRowCreated, setIsRowCreated }: Props) => {
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
-      if (rowData.id === 112233) {
-        try {
-          const response = await createRow(rowData).unwrap()
-          toggleDisabled()
-          setIsRowCreated(false)
-        } catch (error) {
-          console.error('Ошибка при создании новой строки:', error)
-        }
-      } else if (rowData.id !== undefined) {
-        try {
-          await updateRow({ id: rowData.id, updatedRow: rowData }).unwrap()
-          toggleDisabled()
-          setIsRowCreated(false)
-        } catch (error) {
-          console.error('Ошибка при обновлении строки:', error)
-        }
+      try {
+        rowData.id === 112233
+          ? await createRow(rowData).unwrap()
+          : await updateRow({ id: rowData.id, updatedRow: rowData }).unwrap()
+
+        toggleDisabled()
+        setIsRowCreated(false)
+      } catch (error) {
+        console.error(
+          `Ошибка при ${
+            rowData.id === 112233 ? 'создании' : 'обновлении'
+          } строки:`,
+          error
+        )
       }
     }
   }
@@ -139,11 +143,9 @@ const TableRow = ({ row, nested, isRowCreated, setIsRowCreated }: Props) => {
     e: React.ChangeEvent<HTMLInputElement>,
     key: keyof RowToRender
   ) => {
-    const value =
-      key === 'rowName' ? e.target.value : parseFloat(e.target.value)
     setRowData((prevState) => ({
       ...prevState,
-      [key]: value,
+      [key]: key === 'rowName' ? e.target.value : parseFloat(e.target.value),
     }))
   }
 
@@ -165,7 +167,7 @@ const TableRow = ({ row, nested, isRowCreated, setIsRowCreated }: Props) => {
 
   return (
     <tr
-      className={`row ${row.id === 112233 ? 'new-row' : ''} no-select `}
+      className={`row ${row.id === 112233 ? 'new-row' : ''} no-select`}
       onDoubleClick={toggleDisabled}
     >
       <td>
@@ -173,7 +175,7 @@ const TableRow = ({ row, nested, isRowCreated, setIsRowCreated }: Props) => {
           nested={nested}
           onAddRow={handleAddEmptyRow}
           onDeleteRow={handleDeleteRow}
-        />{' '}
+        />
       </td>
       {rowKeys.map((key) => (
         <td key={key}>

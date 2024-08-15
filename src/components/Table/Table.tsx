@@ -7,7 +7,6 @@ import { Row } from '../../types'
 export default function Table() {
   const { data: rows = [], isLoading, isError } = useGetRowsQuery()
   const [isRowCreated, setIsRowCreated] = useState(false)
-  console.log(rows)
 
   const renderRows = (rows: Row[], nested: number = 1) => {
     return rows.map((row) => (
