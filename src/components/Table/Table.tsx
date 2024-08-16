@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './Table.scss'
 import TableRow from '../TableRow/TableRow'
-import { useGetRowsQuery } from '../../api'
+import { useGetRowsQuery } from '../../services/api'
 import { Row } from '../../types'
 
 export default function Table() {

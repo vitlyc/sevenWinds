@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import './TableRow.scss'
 import TableCell from '../TableCell/TableCell'
-import { useFocus } from '../../utils/useFocus'
+import { useFocus } from '../../hooks/useFocus'
 import { Row, RowToRender } from '../../types'
 import {
   useGetRowsQuery,
@@ -10,8 +10,8 @@ import {
   useCreateRowMutation,
   useDeleteRowMutation,
   useUpdateRowMutation,
-} from '../../api'
-import { AppDispatch } from '../../store'
+} from '../../services/api'
+import { AppDispatch } from '../../app/store'
 
 type Props = {
   row: Row
@@ -92,7 +92,8 @@ const TableRow = ({ row, nested, isRowCreated, setIsRowCreated }: Props) => {
   }
 
   const handleAddEmptyRow = () => {
-    if (!cachedRows || isRowCreated) return
+    // Блокируем создание потомков, если строка в режиме редактирования или ещё не была отправлена на сервер
+    if (!cachedRows || isRowCreated || !isDisabled || row.id === 112233) return
 
     dispatch(
       updateQueryData('getRows', undefined, (draft) => {
@@ -122,10 +123,11 @@ const TableRow = ({ row, nested, isRowCreated, setIsRowCreated }: Props) => {
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && rowData.rowName.trim() !== '') {
       try {
-        rowData.id === 112233
-          ? await createRow(rowData).unwrap()
-          : await updateRow({ id: rowData.id, updatedRow: rowData }).unwrap()
-
+        if (rowData.id === 112233) {
+          await createRow(rowData).unwrap()
+        } else {
+          await updateRow({ id: rowData.id, updatedRow: rowData }).unwrap()
+        }
         toggleDisabled()
         setIsRowCreated(false)
       } catch (error) {

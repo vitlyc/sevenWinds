@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import type { Row } from './types'
+import type { Row } from '../types'
 
 const baseUrl: string = import.meta.env.VITE_BASE_URL
 
